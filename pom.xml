@@ -21,5 +21,7 @@
   </build>
   <modules>
   	<module>spring-boot-hellospring</module>
+  	<module>spring-boot-emaillist</module>
+  	<module>mysite</module>
   </modules>
 </project>
