@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comment">
+	<insert id="insert" parameterType="commentvo">
+		<![CDATA[
+		insert
+		  into comment
+		values (null, #{content}, now(), #{postNo},#{userName})		
+		]]>	
+	</insert>
+	
+	<select id="selectByIdAndPassword" resultType="uservo" parameterType="map">
+		<![CDATA[
+		select * 
+		  from user 
+		 where id=#{id }
+		   and password = password(#{password })
+		]]>
+	</select>
+	<!-- <select id="selectList" resultType="commentvo" parameterType="long">
+		<![CDATA[
+		select a.content, d.name as userName
+		  from comment a,post b, category c, user d
+		 where a.post_no = b.no and b.category_no = c.no and c.user_no = d.no and b.no = #{postNo}
+		]]>
+	</select> -->
+	<select id="selectList" resultType="commentvo" parameterType="long">
+		<![CDATA[
+		select content, user_name as userName, no
+		  from comment
+		 where post_no = #{postNo}
+		]]>
+	</select>
+	<delete id="delete"  parameterType="long">
+		<![CDATA[
+		delete 
+		  from comment
+		 where no = #{no}
+		]]>
+	</delete>
+	<select id="selectById" resultType="uservo" parameterType="string">
+		<![CDATA[
+		select no,id,name
+		  from user 
+		 where id=#{id }
+		]]>
+	</select>
+	<select id="getById" resultType="uservo" parameterType="string">
+		<![CDATA[
+		select no, name
+		  from user 
+		 where id=#{id }
+		]]>
+	</select>
+	
+	<select id="getByNo" resultType="uservo" parameterType="long">
+		<![CDATA[
+		select no, name, email, gender 
+		  from user 
+		 where no=#{no }
+		]]>
+	</select>
+
+	<update id="update" parameterType="uservo">
+		<![CDATA[
+		update user
+		   set name=#{name },
+		]]>
+		<if test="password != ''">
+			<![CDATA[   
+		       password=password(#{password }),
+			]]>       
+		</if>
+		<![CDATA[
+			   gender=#{gender }
+		 where no = #{no }
+		]]>
+	</update>	
+
+</mapper>

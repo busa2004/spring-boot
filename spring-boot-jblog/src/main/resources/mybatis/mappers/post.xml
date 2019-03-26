@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+	<insert id="insert" parameterType="postvo">
+		<![CDATA[
+		insert
+		  into post
+		values (null,#{title},#{content},now(),#{categoryNo},'y')		
+		]]>	
+	</insert>
+	<insert id="insertDefault" parameterType="categoryvo">
+		<![CDATA[
+		insert
+		  into post
+		values (null,#{name},#{description},now(),#{no},'n')		
+		]]>	
+	</insert>
+	<insert id="default" parameterType="uservo">
+		<![CDATA[
+		insert
+		  into post
+		values (null,'기본글','기본내용',now(),#{categoryNo},'n')		
+		]]>	
+	</insert>
+	<select id="selectList" resultType="postvo" parameterType="long">
+		<![CDATA[
+		select no,title,content,reg_date as regDate,category_no as categoryNo, role
+		  from post 
+		 where category_no=#{no}
+		]]>
+	</select>
+	<select id="getSerachList" resultType="postvo" parameterType="blogvo">
+		<![CDATA[
+		select a.no,a.title,a.content,a.reg_date as regDate,a.category_no as categoryNo, a.role, b.user_no as userNo, c.name as userName, c.id as userId, b.no as categoryNo
+		  from post a, category b, user c
+		  where (a.title like '%${keyword}%' or a.content like '%${keyword}%' or c.name like '%${keyword}%') and c.no = b.user_no and a.category_no = b.no and a.role = 'y'
+		]]>
+	</select>
+	<select id="select" resultType="postvo" parameterType="long">
+		<![CDATA[
+		select no,title,content,reg_date as regDate,category_no as categoryNo , role
+		  from post 
+		 where no=#{no}
+		]]>
+	</select>
+	<select id="getByEmail" resultType="uservo" parameterType="string">
+		<![CDATA[
+		select no, name, email, gender 
+		  from user 
+		 where email=#{email }
+		]]>
+	</select>
+	
+	<select id="getByNo" resultType="uservo" parameterType="long">
+		<![CDATA[
+		select no, name, email, gender 
+		  from user 
+		 where no=#{no }
+		]]>
+	</select>
+	<update id="update" parameterType="blogvo">
+		<![CDATA[
+		update blog
+		set title=#{title}, logo=#{logo}
+		where user_no=#{userNo}
+		]]>
+	</update>
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+		delete
+		from post
+		where category_no=#{no}
+		]]>
+	
+	</delete>
+	<update id="updates" parameterType="blogvo">
+		<![CDATA[
+		update user
+		   set name=#{name },
+		]]>
+		<if test="password != ''">
+			<![CDATA[   
+		       password=password(#{password }),
+			]]>       
+		</if>
+		<![CDATA[
+			   gender=#{gender }
+		 where no = #{no }
+		]]>
+	</update>	
+	
+</mapper>

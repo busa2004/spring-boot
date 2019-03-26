@@ -1,4 +1,4 @@
-package com.douzone.mysite;
+package com.douzone.jblog.config;
 
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -12,41 +12,62 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.douzone.security.AuthInterceptor;
+import com.douzone.security.AuthLoginInterceptor;
+import com.douzone.security.AuthLogoutInterceptor;
+import com.douzone.security.AuthUserHandlerMethodArgumentResolver;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 @Configuration
-@EnableWebMvc
-public class MVCConfig implements WebMvcConfigurer{
+public class WebConfig implements WebMvcConfigurer{
 	//
-	//view Resolver
+	// Argument Resolver
 	//
 	@Bean
-	public ViewResolver viewResolver() {
-		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-		resolver.setPrefix("/WEB-INF/views/");
-		resolver.setSuffix(".jsp");
-		resolver.setExposeContextBeansAsAttributes(true);
-		
-		return resolver;
+	public AuthUserHandlerMethodArgumentResolver authUserHandlerMethodArgumentResolver() {
+		return new AuthUserHandlerMethodArgumentResolver();
 	}
-
-	
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+		argumentResolvers.add(authUserHandlerMethodArgumentResolver());
+	}
 	//
-	// Falling Back On the DefaultServlet To Serve Resources
+	// Intercepter
+	//
+	@Bean
+	public AuthLoginInterceptor authLoginInterceptor() {
+		return new AuthLoginInterceptor();
+	}
+	@Bean
+	public AuthLogoutInterceptor authLogoutInterceptor() {
+		return new AuthLogoutInterceptor();
+	}
+	@Bean
+	public AuthInterceptor authInterceptor() {
+		return new AuthInterceptor();
+	}
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(authLoginInterceptor()).addPathPatterns("/user/auth");
+		registry.addInterceptor(authLogoutInterceptor()).addPathPatterns("/user/logout");
+		registry.addInterceptor(authInterceptor()).addPathPatterns("/**").
+		excludePathPatterns("/user/auth").
+		excludePathPatterns("/user/logout").
+		excludePathPatterns("/assets/*");
+	}
+	//
+	// mvc resources mapping url
 	//
 	@Override
-	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-		configurer.enable();
-		
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/uploads/images/**")
+		.addResourceLocations("file:/uploads/");
 	}
-
 	//
 	// Message Converters
 	//
@@ -74,32 +95,5 @@ public class MVCConfig implements WebMvcConfigurer{
 		converters.add(stringHttpMessageConverter());
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
