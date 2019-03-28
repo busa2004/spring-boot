@@ -29,9 +29,6 @@
   	</plugins>
   </build>
   <modules>
-  	<module>spring-boot-hellospring</module>
-  	<module>spring-boot-emaillist</module>
   	<module>mysite</module>
-  	<module>spring-boot-jblog</module>
   </modules>
 </project>
