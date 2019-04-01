@@ -51,6 +51,7 @@ public class WebConfig implements WebMvcConfigurer{
 	public AuthInterceptor authInterceptor() {
 		return new AuthInterceptor();
 	}
+	//인터셉터
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authLoginInterceptor()).addPathPatterns("/user/auth");

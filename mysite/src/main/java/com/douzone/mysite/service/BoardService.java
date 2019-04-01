@@ -73,6 +73,7 @@ public class BoardService {
 		int endPage = ( nextPage > 0 ) ? ( beginPage - 1 ) + LIST_SIZE : pageCount;
 		
 		//4. 리스트 가져오기
+		System.out.println("리스트 가져오기");
 		List<BoardVo> list = boardDao.getList( keyword, currentPage, LIST_SIZE );
 		
 		//5. 리스트 정보를 맵에 저장
