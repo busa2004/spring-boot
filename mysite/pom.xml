@@ -9,9 +9,77 @@
   </parent>
   <artifactId>mysite</artifactId>
   <packaging>war</packaging>
-  
+  <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<jjwt.version>0.9.0</jjwt.version>
+	</properties>
   <dependencies>
-  	
+  	 <!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jjwt.version}</version>
+		</dependency>
+		<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-databind</artifactId>
+	</dependency>
+	<!-- For Java 8 Date/Time Support -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	<dependency>
+
+		<groupId>org.springframework.security</groupId>
+
+		<artifactId>spring-security-web</artifactId>
+
+
+	</dependency>
+
+	<dependency>
+
+		<groupId>org.springframework.security</groupId>
+
+		<artifactId>spring-security-config</artifactId>
+
+
+	</dependency>	  
+
+
+
   	
   	<dependency>
   		<groupId>org.springframework.boot</groupId>
@@ -39,7 +107,6 @@
   	<dependency>
   		<groupId>mysql</groupId>
   		<artifactId>mysql-connector-java</artifactId>
-  		<version>5.1.38</version>
   	</dependency>
   	<!-- common fileupload -->
 		<dependency>
@@ -55,13 +122,19 @@
   	
   </dependencies>
   
-  <!-- <profiles>
+   <profiles>
 		<profile>
 			<id>production</id>
 			<build>
 				<resources>
 					<resource>
 						<directory>${project.basedir}/src/main/resources</directory>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>${project.basedir}/src/production/resources</directory>
 						<excludes>
 							<exclude>**/*.java</exclude>
 						</excludes>
@@ -78,7 +151,7 @@
 				</plugins>
 			</build>
 			<dependencies>
-				Servlet
+			
 				<dependency>
 					<groupId>javax.servlet</groupId>
 					<artifactId>javax.servlet-api</artifactId>
@@ -93,11 +166,23 @@
 				</dependency>
 			</dependencies>
 		</profile>
-	</profiles> -->
+	</profiles> 
   
 	<build>
 		<finalName>${artifactId}</finalName>
-		<plugins>
+		<plugins><plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
